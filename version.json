@@ -1,6 +1,6 @@
 {
   "versionCode": 27,
-  "versionName": "3.6,
+  "versionName": "3.6",
   "apkUrl": "https://github.com/Armansikdar/CalcVault-releases/releases/latest/download/app-release.apk",
   "notes": "Backup & Restore, smaller photos and videos, swipe viewer and fixes.",
   "mandatory": false
