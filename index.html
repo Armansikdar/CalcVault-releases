@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CalcVault: a calculator that hides your private photos</title>
+<meta name="description" content="CalcVault looks like a normal calculator. Enter your secret PIN and it opens an encrypted vault for your private photos and videos. Free for Android.">
+<meta property="og:title" content="CalcVault: a calculator that hides your private photos">
+<meta property="og:description" content="Looks like a calculator. Opens an encrypted vault with your secret PIN or fingerprint. Free for Android.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07070d">
+<style>
+:root{
+  --bg:#07070d; --surface:#12121c; --surface2:#191926; --line:rgba(255,255,255,.10);
+  --text:#f3f3fa; --muted:#9a9ab3; --violet:#8b5cf6; --cyan:#22d3ee;
+  --grad:linear-gradient(135deg,#8b5cf6,#22d3ee);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(600px 400px at 15% -5%,rgba(139,92,246,.35),transparent 70%),
+             radial-gradient(500px 380px at 95% 15%,rgba(34,211,238,.20),transparent 70%)}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.2px;text-decoration:none}
+.logo i{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;color:#07070d;font-style:normal;font-weight:900;font-size:17px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;text-decoration:none;font-weight:700;font-size:16px;padding:14px 26px;border-radius:999px;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--grad);color:#07070d;box-shadow:0 10px 40px -10px rgba(139,92,246,.7)}
+.btn.ghost{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--text)}
+.btn.small{padding:9px 18px;font-size:14px}
+
+/* hero */
+.hero{display:grid;gap:40px;padding:36px 0 70px;align-items:center}
+@media(min-width:860px){.hero{grid-template-columns:1.1fr .9fr;padding-top:60px}}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--cyan);border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.08);padding:6px 14px;border-radius:999px;margin-bottom:18px}
+h1{font-size:clamp(34px,7vw,58px);line-height:1.08;letter-spacing:-1px;font-weight:800}
+h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{margin:20px 0 28px;color:var(--muted);font-size:clamp(16px,2.4vw,19px);max-width:520px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.note{margin-top:14px;font-size:13px;color:var(--muted)}
+
+/* phones */
+.phones{display:flex;justify-content:center;gap:18px;position:relative}
+.phone{width:min(210px,42vw);aspect-ratio:9/18.5;border-radius:30px;background:#000;border:2px solid #2a2a3a;padding:10px;box-shadow:0 30px 80px -20px rgba(139,92,246,.55)}
+.phone.b{margin-top:44px}
+.screen{height:100%;border-radius:22px;overflow:hidden;background:#0b0b12;padding:12px 10px;display:flex;flex-direction:column}
+.disp{flex:1;display:flex;align-items:flex-end;justify-content:flex-end;font-size:30px;font-weight:300;padding:6px 6px 10px}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.keys b{aspect-ratio:1.15;border-radius:12px;background:#17171f;display:grid;place-items:center;font-size:14px;color:#cfcfe0;font-weight:500}
+.keys b.op{background:#142033;color:#7fd4ff}
+.keys b.eq{background:#3b4a63;color:#fff}
+.vh{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.vh strong{color:var(--text);font-size:13px}
+.folders{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.folders div{aspect-ratio:1.2;border-radius:12px;background:linear-gradient(160deg,#1c1c2b,#0e0e16);border:1px solid var(--line);display:flex;align-items:flex-end;padding:7px;font-size:10px;color:var(--muted)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.grid3 span{aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#2a1f4a,#12303a)}
+.grid3 span:nth-child(2n){background:linear-gradient(135deg,#1d2a46,#2a1f3a)}
+.grid3 span:nth-child(3n){background:linear-gradient(135deg,#123036,#241b44)}
+.lockpill{margin:auto auto 6px;font-size:10px;padding:5px 12px;border-radius:999px;background:var(--grad);color:#07070d;font-weight:700}
+
+/* sections */
+section{padding:60px 0}
+h2{font-size:clamp(26px,5vw,38px);letter-spacing:-.5px;line-height:1.15;margin-bottom:10px}
+.sub{color:var(--muted);max-width:620px;margin-bottom:34px}
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px}
+.card .ic{width:44px;height:44px;border-radius:13px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.35);display:grid;place-items:center;font-size:21px;margin-bottom:14px}
+.card h3{font-size:18px;margin-bottom:6px}
+.card p{color:var(--muted);font-size:15px}
+.steps{display:grid;gap:14px;counter-reset:s;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;position:relative}
+.step:before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--grad);color:#07070d;font-weight:800;margin-bottom:12px}
+.step h3{font-size:17px;margin-bottom:4px}
+.step p{color:var(--muted);font-size:15px}
+.honest{background:linear-gradient(160deg,rgba(139,92,246,.12),rgba(34,211,238,.06));border:1px solid var(--line);border-radius:26px;padding:28px}
+.honest ul{margin:14px 0 0 20px;color:var(--muted)}
+.honest li{margin:6px 0}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+details p{color:var(--muted);margin-top:10px;font-size:15px}
+.final{text-align:center;padding:70px 20px;border-radius:30px;background:radial-gradient(500px 260px at 50% 0%,rgba(139,92,246,.35),transparent 70%),var(--surface);border:1px solid var(--line)}
+.final p{color:var(--muted);margin:10px auto 24px;max-width:480px}
+footer{padding:36px 0 50px;color:var(--muted);font-size:14px;text-align:center}
+footer a{color:var(--cyan)}
+.priv h3{margin:18px 0 6px;font-size:17px}
+.priv p,.priv li{color:var(--muted);font-size:15px}
+.priv ul{margin:6px 0 0 20px}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+
+<nav>
+  <a class="logo" href="#"><i>=</i> CalcVault</a>
+  <a class="btn ghost small" href="https://github.com/Armansikdar/CalcVault-releases/releases/latest">Download</a>
+</nav>
+
+<header class="hero">
+  <div>
+    <span class="tag">Free for Android</span>
+    <h1>It's a calculator.<br><span>Until you enter your PIN.</span></h1>
+    <p class="lead">CalcVault looks and works like a normal calculator. Type your secret PIN, or use your fingerprint, and it opens an encrypted vault for your private photos and videos.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/Armansikdar/CalcVault-releases/releases/latest">Download for Android</a>
+      <a class="btn ghost" href="#how">How it works</a>
+    </div>
+    <p class="note">No account. No cloud. Your files stay on your phone.</p>
+  </div>
+
+  <div class="phones" aria-hidden="true">
+    <div class="phone">
+      <div class="screen">
+        <div class="disp">1,284</div>
+        <div class="keys">
+          <b>C</b><b>±</b><b>%</b><b class="op">÷</b>
+          <b>7</b><b>8</b><b>9</b><b class="op">×</b>
+          <b>4</b><b>5</b><b>6</b><b class="op">−</b>
+          <b>1</b><b>2</b><b>3</b><b class="op">+</b>
+          <b>⌫</b><b>0</b><b>.</b><b class="eq">=</b>
+        </div>
+      </div>
+    </div>
+    <div class="phone b">
+      <div class="screen">
+        <div class="vh"><strong>Vault</strong></div>
+        <div class="folders"><div>Photos</div><div>Videos</div></div>
+        <div class="grid3"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="lockpill">Encrypted</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <h2>Everything you need to keep it private</h2>
+  <p class="sub">Simple to use, built to keep nosy people out.</p>
+  <div class="cards">
+    <div class="card"><div class="ic">🧮</div><h3>Disguised as a calculator</h3><p>The app opens as a working calculator. You can also change its name and icon to Notes or Weather.</p></div>
+    <div class="card"><div class="ic">🔐</div><h3>Strong encryption</h3><p>Photos and videos are encrypted with AES-256-GCM. Your PIN is protected with a slow, salted key derivation and the phone's hardware-backed keystore.</p></div>
+    <div class="card"><div class="ic">👆</div><h3>PIN or fingerprint</h3><p>Unlock with your secret PIN, or with your fingerprint after you set it up. Wrong guesses make the wait grow longer.</p></div>
+    <div class="card"><div class="ic">🎭</div><h3>Decoy vault</h3><p>Set a second PIN that opens a separate, harmless vault with its own key. Hand over your phone without worry.</p></div>
+    <div class="card"><div class="ic">📸</div><h3>Intruder log</h3><p>After repeated wrong PINs, CalcVault can take a photo with the front camera and log the attempt, so you know who tried.</p></div>
+    <div class="card"><div class="ic">📁</div><h3>Folders and move-in</h3><p>Pick photos and videos from the in-app gallery. They are encrypted and, with your permission, removed from the phone's Gallery.</p></div>
+    <div class="card"><div class="ic">💾</div><h3>Encrypted backup</h3><p>Back up your vault with a password and restore it on a new phone. Only the password you chose can open it.</p></div>
+    <div class="card"><div class="ic">🛡️</div><h3>Screen protection</h3><p>Hide the app preview in recent apps and block screenshots inside the vault, if you turn it on.</p></div>
+    <div class="card"><div class="ic">🌐</div><h3>Private browser</h3><p>Browse and download files straight into the vault, with fast multi-connection downloads and an ad blocker.</p></div>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p class="sub">Four steps. Two minutes.</p>
+  <div class="steps">
+    <div class="step"><h3>Install</h3><p>Download the APK and allow your phone to install it.</p></div>
+    <div class="step"><h3>Set your PIN</h3><p>Choose your own secret PIN on first launch. Nothing is set for you.</p></div>
+    <div class="step"><h3>Add photos</h3><p>Pick photos and videos. They are encrypted and moved into the vault.</p></div>
+    <div class="step"><h3>Use it like a calculator</h3><p>Type your PIN on the keypad and the vault opens. Anyone else just sees a calculator.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="honest">
+    <h2>Honest about what it can and can't do</h2>
+    <p class="sub" style="margin-bottom:0">Good privacy tools tell you their limits.</p>
+    <ul>
+      <li><strong>Remember your PIN and your backup password.</strong> There is no cloud copy and no reset, so we can't recover your files for you.</li>
+      <li><strong>Make a backup.</strong> If you lose or reset your phone, the vault goes with it. CalcVault reminds you to back up.</li>
+      <li><strong>A phone that is rooted or infected with spyware</strong> can't be fully protected by any app. Keep your phone's own lock screen on.</li>
+      <li>CalcVault is a young project and it is improving quickly. Tell us what breaks.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Questions</h2>
+  <p class="sub">Short answers.</p>
+  <details><summary>Is it free?</summary><p>Yes. There are no accounts, no subscriptions and no ads inside the vault.</p></details>
+  <details><summary>Do my photos go to a server?</summary><p>No. Your files are stored encrypted on your own phone. We don't run a server for them. The app uses the internet only for the browser, update checks and, if you choose to send one, a support message.</p></details>
+  <details><summary>What if I forget my PIN?</summary><p>There's no reset, by design: anyone who could reset it could also open your vault. If you set up a fingerprint or made a backup, you still have a way in.</p></details>
+  <details><summary>Which phones does it work on?</summary><p>Android 7.0 and newer.</p></details>
+  <details><summary>Why do I have to install it from outside Google Play?</summary><p>CalcVault is currently shared as a direct download. Your phone will ask once to allow installing apps from your browser. Only download it from this page.</p></details>
+</section>
+
+<section>
+  <div class="final">
+    <h2>Keep your private things private.</h2>
+    <p>Free. Takes a minute to set up.</p>
+    <a class="btn primary" href="https://github.com/Armansikdar/CalcVault-releases/releases/latest">Download CalcVault</a>
+  </div>
+</section>
+
+<section class="priv" id="privacy">
+  <h2>Privacy policy</h2>
+  <p class="sub" style="margin-bottom:6px">Plain language, last updated November 2026.</p>
+  <h3>What stays on your phone</h3>
+  <p>Your photos, videos, PINs and encryption keys are stored on your device only. We cannot see them, and we do not upload them anywhere.</p>
+  <h3>What the app sends over the internet</h3>
+  <ul>
+    <li><strong>Update check:</strong> the app reads a small public file from GitHub to see if a new version exists.</li>
+    <li><strong>Support messages:</strong> only if you press Send in the Support box. The text you wrote (and your phone model and Android version, if you tick that box) is sent to us. We don't collect your name, email or contacts. Please don't put your PIN or private details in it.</li>
+    <li><strong>Browser:</strong> pages you open in the built-in browser load from the websites you visit.</li>
+  </ul>
+  <h3>Permissions</h3>
+  <p>Camera (intruder photo), photos and videos (to add them to the vault), notifications and storage (downloads and backups), biometrics (fingerprint unlock) and the internet (above). You can remove any permission in your phone's settings.</p>
+  <h3>Contact</h3>
+  <p>Use the Support box inside the app.</p>
+</section>
+
+<footer>
+  <p>© 2026 CalcVault · <a href="https://github.com/Armansikdar/CalcVault-releases/releases/latest">Download</a> · <a href="#privacy">Privacy</a></p>
+</footer>
+
+</div>
+</body>
+</html>
